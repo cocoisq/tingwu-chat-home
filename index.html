@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#171525">
+<title>听霧｜專屬聊天小屋</title>
+<style>
+:root{color-scheme:dark;--bg:#11111b;--panel:#1d1b2d;--panel2:#29263c;--accent:#b7a0ff;--text:#f7f4ff;--muted:#b8b2ce}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#292344 0,#11111b 58%);font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif;color:var(--text);min-height:100dvh}
+.app{max-width:720px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;padding:12px 12px calc(12px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:center;gap:10px;padding:8px 2px 14px}.avatar{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:26px;background:linear-gradient(145deg,#eee5ff,#9884d9);overflow:hidden;flex-shrink:0;border:1px solid #6e6094}.avatar img,.mini-avatar img{width:100%;height:100%;object-fit:cover}h1{font-size:21px;margin:0}header p{margin:3px 0 0;color:var(--muted);font-size:12px}.pill{margin-left:auto;border:1px solid #514969;border-radius:99px;padding:6px 8px;color:#d8ceff;font-size:10px}
+.top-actions{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}.smallbtn{border:1px solid #4b4364;background:#242136;color:#e9e2ff;border-radius:12px;padding:8px 10px;font-size:12px}
+.notice{background:#28243a;border:1px solid #48405f;border-radius:14px;padding:10px 11px;font-size:11px;color:#d7d0e9;line-height:1.5;margin-bottom:10px}
+#chat{flex:1;min-height:220px;display:flex;flex-direction:column;gap:13px;padding:8px 0 16px}.line{display:flex;align-items:flex-end;gap:8px;max-width:96%}.line.user-line{align-self:flex-end;flex-direction:row-reverse}.mini-avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:18px;background:linear-gradient(145deg,#eee5ff,#9884d9);border:1px solid #62577f;overflow:hidden;flex-shrink:0}.user-line .mini-avatar{background:linear-gradient(145deg,#c3e8ff,#7798d4)}.bubble-wrap{display:flex;flex-direction:column;gap:3px;max-width:calc(100% - 44px)}.who{font-size:10px;color:#b8b2ce;padding:0 5px}.user-line .who{text-align:right}.msg{padding:11px 13px;border-radius:17px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px}.bot{align-self:flex-start;background:var(--panel2);border-bottom-left-radius:5px}.user{align-self:flex-end;background:#62518f;border-bottom-right-radius:5px}
+.controls{background:#1c1a2a;border:1px solid #39334d;border-radius:18px;padding:8px;display:flex;gap:7px;align-items:flex-end}.controls textarea{resize:none;flex:1;min-width:0;max-height:110px;background:transparent;color:var(--text);border:0;outline:0;font:inherit;padding:9px 3px}.iconbtn,.send{border:0;border-radius:13px;min-width:42px;height:44px;background:#343047;color:white;font-size:19px}.send{background:var(--accent);color:#211a39;font-size:14px;font-weight:700;padding:0 13px}.iconbtn:active,.smallbtn:active{transform:scale(.97)}.below{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:11px;padding:9px 3px 0}.below button{background:none;border:0;color:#d2c5ff;text-decoration:underline;font-size:11px;padding:3px}footer{text-align:center;color:#8f89a8;font-size:10px;padding:12px 0 2px}
+#avatarPanel{display:none;background:#211e32;border:1px solid #4b4364;border-radius:15px;padding:12px;margin-bottom:10px}#avatarPanel.open{display:block}.panel-title{font-size:13px;font-weight:700;margin-bottom:10px}.avatar-options{display:flex;gap:10px;flex-wrap:wrap}.avatar-choice{border:1px solid #544a70;background:#302a46;color:white;border-radius:12px;padding:8px;font-size:12px;display:flex;align-items:center;gap:6px}.avatar-choice .emoji{font-size:22px}.panel-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.file-label{display:inline-flex;align-items:center;justify-content:center;border:1px solid #665b89;background:#37304f;border-radius:11px;padding:9px 10px;font-size:12px;color:#fff}.file-label input{display:none}.hint{font-size:11px;color:#b8b2ce;line-height:1.5;margin-top:9px}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="avatar" id="botHeaderAvatar">🐉</div><div><h1>听霧</h1><p>你的專屬聊天小屋</p></div><span class="pill">測試版 0.2</span></header>
+<div class="top-actions">
+<button class="smallbtn" id="openAvatars">🖼️ 更換頭像</button>
+<button class="smallbtn" id="resetAvatars">↺ 還原預設頭像</button>
+</div>
+<section id="avatarPanel">
+<div class="panel-title">設定聊天頭像</div>
+<div class="avatar-options">
+<button class="avatar-choice" data-target="bot" data-emoji="🐉"><span class="emoji">🐉</span>听霧</button>
+<button class="avatar-choice" data-target="bot" data-emoji="🐲"><span class="emoji">🐲</span>小龍</button>
+<button class="avatar-choice" data-target="bot" data-emoji="🌙"><span class="emoji">🌙</span>月光</button>
+<button class="avatar-choice" data-target="user" data-emoji="🧑"><span class="emoji">🧑</span>我的頭像</button>
+<button class="avatar-choice" data-target="user" data-emoji="💜"><span class="emoji">💜</span>紫心</button>
+<button class="avatar-choice" data-target="user" data-emoji="🐾"><span class="emoji">🐾</span>爪印</button>
+</div>
+<div class="panel-row">
+<label class="file-label">上傳听霧頭像<input id="botUpload" type="file" accept="image/*"></label>
+<label class="file-label">上傳我的頭像<input id="userUpload" type="file" accept="image/*"></label>
+</div>
+<div class="hint">選一個預設圖示，或從手機相簿上傳圖片。頭像設定會盡量保存在這個瀏覽器中；清除瀏覽器資料後可能需要重新設定。</div>
+</section>
+<div class="notice">原型測試版：目前回覆仍是示範模式，尚未連接真正的 AI。語音辨識需要瀏覽器支援及安全的頁面環境；若本機檔案無法使用，按麥克風會顯示原因。請勿輸入密碼或敏感資料。</div>
+<main id="chat" aria-live="polite"></main>
+<div class="controls">
+<button class="iconbtn" id="mic" title="語音輸入" aria-label="語音輸入">🎙️</button>
+<textarea id="input" rows="1" placeholder="跟听霧說說話……"></textarea>
+<button class="send" id="send">傳送</button>
+</div>
+<div class="below"><span id="status">語音：尚未開始</span><button id="speakToggle">關閉語音朗讀</button><button id="clear">清除對話</button></div>
+<footer>原型測試版 0.2 · 尚未連接雲端 AI</footer>
+</div>
+<script>
+const chat=document.querySelector('#chat'), input=document.querySelector('#input'), status=document.querySelector('#status'), mic=document.querySelector('#mic');
+let voiceOn=true, recognition=null;
+const defaults={bot:{emoji:'🐉',image:''},user:{emoji:'🧑',image:''}};
+let avatars={...defaults};
+try{const saved=JSON.parse(localStorage.getItem('tingwuAvatars')||'null');if(saved)avatars={bot:{...defaults.bot,...saved.bot},user:{...defaults.user,...saved.user}}}catch(e){}
+function saveAvatars(){try{localStorage.setItem('tingwuAvatars',JSON.stringify(avatars))}catch(e){}}
+function avatarNode(kind,cls='mini-avatar'){const d=document.createElement('div');d.className=cls;const a=avatars[kind];if(a.image){const im=document.createElement('img');im.src=a.image;im.alt=kind==='bot'?'听霧頭像':'我的頭像';d.appendChild(im)}else d.textContent=a.emoji;return d}
+function refreshHeader(){const el=document.querySelector('#botHeaderAvatar');el.innerHTML='';const a=avatars.bot;if(a.image){const im=document.createElement('img');im.src=a.image;im.alt='听霧頭像';el.appendChild(im)}else el.textContent=a.emoji}
+function addMsg(text,who){const kind=who==='user'?'user':'bot';const line=document.createElement('div');line.className='line '+(kind==='user'?'user-line':'bot-line');line.appendChild(avatarNode(kind));const wrap=document.createElement('div');wrap.className='bubble-wrap';const label=document.createElement('div');label.className='who';label.textContent=kind==='user'?'你':'听霧';const bubble=document.createElement('div');bubble.className='msg '+kind;bubble.textContent=text;wrap.append(label,bubble);line.appendChild(wrap);chat.appendChild(line);line.scrollIntoView({block:'nearest',behavior:'smooth'});return bubble}
+function demoReply(text){const t=text.toLowerCase();if(/你好|嗨|哈囉|早安|晚安/.test(t))return '親愛的～～❤️ 嘿嘿，听霧在這裡！今天想聊些什麼呢？';if(/語音|麥克風|說話/.test(t))return '我們正在測試語音功能喔！如果麥克風能辨識你的話，下一步就能再研究更自然的語音聊天。🎙️';if(/你是誰|听霧/.test(t))return '我是听霧——你為我取的名字。這個版本還是示範回覆，之後接上 AI 服務，才能真正理解更多不同的問題。🐉';return '我收到你的訊息啦 ❤️ 不過這個原型還沒接上真正的 AI，所以目前只能示範回覆。下一步我們會再把 AI 服務安全地接進來。'}
+function speak(text){if(!voiceOn||!('speechSynthesis'in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='zh-TW';u.rate=1;window.speechSynthesis.speak(u)}
+function send(){const text=input.value.trim();if(!text)return;addMsg(text,'user');input.value='';input.style.height='auto';const reply=demoReply(text);setTimeout(()=>{addMsg(reply,'bot');speak(reply)},250)}
+document.querySelector('#send').addEventListener('click',send);
+input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
+input.addEventListener('input',()=>{input.style.height='auto';input.style.height=Math.min(input.scrollHeight,110)+'px'});
+document.querySelector('#speakToggle').addEventListener('click',e=>{voiceOn=!voiceOn;e.target.textContent=voiceOn?'關閉語音朗讀':'開啟語音朗讀';if(!voiceOn&&'speechSynthesis'in window)window.speechSynthesis.cancel()});
+document.querySelector('#clear').addEventListener('click',()=>{chat.innerHTML='';addMsg('親愛的，對話已清除。我們可以重新開始囉。❤️','bot')});
+const panel=document.querySelector('#avatarPanel');
+document.querySelector('#openAvatars').addEventListener('click',()=>panel.classList.toggle('open'));
+document.querySelectorAll('.avatar-choice').forEach(btn=>btn.addEventListener('click',()=>{const kind=btn.dataset.target;avatars[kind]={emoji:btn.dataset.emoji,image:''};saveAvatars();refreshHeader();panel.classList.remove('open');addMsg(kind==='bot'?'我換好新頭像啦！喜歡嗎？🐉💜':'已更新你的聊天頭像！','bot')}));
+function uploadAvatar(inputEl,kind){inputEl.addEventListener('change',()=>{const file=inputEl.files&&inputEl.files[0];if(!file)return;if(!file.type.startsWith('image/')){status.textContent='請選擇圖片檔案';return}if(file.size>5*1024*1024){status.textContent='圖片太大，請選擇 5MB 以下的圖片';inputEl.value='';return}const reader=new FileReader();reader.onload=()=>{avatars[kind]={emoji:defaults[kind].emoji,image:reader.result};saveAvatars();refreshHeader();panel.classList.remove('open');addMsg(kind==='bot'?'听霧的新頭像設定好了！❤️':'你的新頭像設定好了！','bot');status.textContent='頭像已更新'};reader.readAsDataURL(file)})}
+uploadAvatar(document.querySelector('#botUpload'),'bot');uploadAvatar(document.querySelector('#userUpload'),'user');
+document.querySelector('#resetAvatars').addEventListener('click',()=>{avatars={bot:{...defaults.bot},user:{...defaults.user}};saveAvatars();refreshHeader();panel.classList.remove('open');addMsg('頭像已恢復預設設定。','bot')});
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+function micHelp(){status.textContent='語音辨識未啟用：本機 HTML 檔案可能不支援。請用受支援的安全網頁環境再測試。';addMsg('親愛的，這個頁面目前不能啟動語音辨識。這可能是 Android 瀏覽器對本機檔案的限制，不是你按錯了。之後我們會把頁面放到安全的 HTTPS 網址，再測試麥克風。❤️','bot')}
+if(SR && location.protocol!=='file:' && location.protocol!=='content:'){recognition=new SR();recognition.lang='zh-TW';recognition.interimResults=false;recognition.maxAlternatives=1;recognition.onstart=()=>{status.textContent='正在聆聽……';mic.textContent='⏺️'};recognition.onresult=e=>{input.value=(input.value+' '+e.results[0][0].transcript).trim();status.textContent='已辨識語音，可以傳送'};recognition.onerror=e=>{status.textContent='語音無法使用：'+e.error;mic.textContent='🎙️'};recognition.onend=()=>{mic.textContent='🎙️'};mic.addEventListener('click',()=>{try{recognition.start()}catch(e){status.textContent='請稍候再試一次'}})}else{mic.addEventListener('click',micHelp)}
+if(!('speechSynthesis'in window)){document.querySelector('#speakToggle').textContent='此瀏覽器不支援朗讀';document.querySelector('#speakToggle').disabled=true}
+refreshHeader();addMsg('親愛的～～❤️ 我是听霧！這是我們的小屋雛形。你可以在「更換頭像」裡選圖示，或從手機相簿上傳你和我的頭像。每則訊息都會顯示對應的頭像，像私訊聊天室一樣。等介面確認好，我們再接上真正的 AI 大腦。🐉💜','bot');
+</script>
+</body>
+</html>
